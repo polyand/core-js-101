@@ -46,8 +46,8 @@ function getComposition(f, g) {
  *   power05(16) => 4
  *
  */
-function getPowerFunction(/* exponent */) {
-  throw new Error('Not implemented');
+function getPowerFunction(exponent) {
+  return ((x) => x ** exponent);
 }
 
 
@@ -64,8 +64,21 @@ function getPowerFunction(/* exponent */) {
  *   getPolynom(8)     => y = 8
  *   getPolynom()      => null
  */
-function getPolynom() {
-  throw new Error('Not implemented');
+function getPolynom(...args) {
+  const numbers = args;
+  if (numbers.length === 0) {
+    return null;
+  }
+  if (numbers.length === 1) {
+    return (() => numbers[0]);
+  }
+  return ((x) => {
+    let result = 0;
+    for (let i = numbers.length - 1; i >= 0; i -= 1) {
+      result += numbers[i] * x ** (numbers.length - 1 - i);
+    }
+    return result;
+  });
 }
 
 
@@ -83,8 +96,12 @@ function getPolynom() {
  *   ...
  *   memoizer() => the same random number  (next run, returns the previous cached result)
  */
-function memoize(/* func */) {
-  throw new Error('Not implemented');
+function memoize(func) {
+  return (function f() {
+    if (f.cache) return f.cache;
+    f.cache = func();
+    return f.cache;
+  });
 }
 
 
@@ -103,8 +120,16 @@ function memoize(/* func */) {
  * }, 2);
  * retryer() => 2
  */
-function retry(/* func, attempts */) {
-  throw new Error('Not implemented');
+function retry(func, attempts) {
+  let att = attempts;
+  return (function f() {
+    try {
+      return func();
+    } catch (err) {
+      att -= 1;
+      return att ? f() : err;
+    }
+  });
 }
 
 
@@ -149,8 +174,11 @@ function logger(/* func, logFunc */) {
  *   partialUsingArguments(fn, 'a','b','c')('d') => 'abcd'
  *   partialUsingArguments(fn, 'a','b','c','d')() => 'abcd'
  */
-function partialUsingArguments(/* fn, ...args1 */) {
-  throw new Error('Not implemented');
+function partialUsingArguments(fn, ...args1) {
+  return ((...args2) => {
+    const args = [...args1, ...args2];
+    return fn(...args);
+  });
 }
 
 
@@ -171,8 +199,11 @@ function partialUsingArguments(/* fn, ...args1 */) {
  *   getId4() => 7
  *   getId10() => 11
  */
-function getIdGeneratorFunction(/* startFrom */) {
-  throw new Error('Not implemented');
+function getIdGeneratorFunction(startFrom) {
+  return (function f() {
+    f.nextIndex = f.nextIndex === undefined ? startFrom : f.nextIndex + 1;
+    return f.nextIndex;
+  });
 }
 
 
